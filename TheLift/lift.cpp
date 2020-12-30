@@ -1,5 +1,8 @@
 #include "lift.h"
 
+#include <algorithm>
+#include <cassert>
+
 Lift::Lift(const Queues &queues, int capacity)
     : mCapacity{capacity}, mQueues{queues}
 {

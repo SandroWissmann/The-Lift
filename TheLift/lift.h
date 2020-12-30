@@ -1,8 +1,6 @@
 #ifndef LIFT_H
 #define LIFT_H
 
-#include <algorithm>
-#include <cassert>
 #include <optional>
 #include <set>
 #include <vector>
