@@ -221,7 +221,7 @@ void Lift::changeDirection()
     }
 }
 
-Direction Lift::direction() const
+Lift::Direction Lift::direction() const
 {
     return mDirection;
 }

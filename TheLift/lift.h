@@ -7,8 +7,6 @@
 #include <set>
 #include <vector>
 
-enum class Direction { up, down };
-
 using Queues = std::vector<std::vector<int>>;
 
 class Lift {
@@ -18,6 +16,8 @@ public:
     void emptyQueues();
 
     std::vector<int> visitedFloors() const;
+
+    enum class Direction { up, down };
 
 private:
     void releasePassengersWithCurrentFloorDestination();
