@@ -53,7 +53,7 @@ private:
     void changeDirection();
     Direction direction() const;
 
-    std::multiset<int> mPassangers{};
+    std::multiset<int> mPassengers{};
     std::vector<int> mVisitedFloors{};
     Direction mDirection = Direction::up;
     int mCurrentFloor = 0;
