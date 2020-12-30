@@ -17,6 +17,21 @@ int main(int argc, char *argv[])
     std::vector<std::vector<int>> queues;
     std::vector<int> result;
 
+    // nothing to do
+    queues = {{}};
+    result = {0};
+    assert(the_lift(queues, 1) == result);
+
+    // lift full up and down, but don't block passengers
+    queues = {
+        {},
+        {3, 3, 3, 0, 0, 0, 0, 0, 3},
+        {},
+        {1, 1, 1},
+    };
+    result = {0, 1, 3, 1, 0, 1, 3, 1, 0, 1, 0};
+    assert(the_lift(queues, 2) == result);
+
     // lift exactly full
     queues = {{}, {}, {5, 5, 5, 5, 5}, {}, {}, {}, {}};
     result = {0, 2, 5, 0};
@@ -78,6 +93,21 @@ int main(int argc, char *argv[])
     result = {0, 6, 5, 4, 3, 2, 1, 0, 5, 4, 3, 2, 1,
               0, 4, 3, 2, 1, 0, 3, 2, 1, 0, 1, 0};
     assert(the_lift(queues, 5) == result);
+
+    // no floors (seg fault)
+    queues = {};
+    result = {0};
+    assert(the_lift(queues, 1) == result);
+
+    // no capacity (infinite loop)
+    queues = {{1}, {}};
+    result = {0};
+    assert(the_lift(queues, 0) == result);
+
+    // passenger not changing floor (infinite loop)
+    queues = {{0}};
+    result = {0};
+    assert(the_lift(queues, 1) == result);
 
     QGuiApplication app(argc, argv);
 
