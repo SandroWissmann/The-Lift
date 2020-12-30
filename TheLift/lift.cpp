@@ -233,12 +233,8 @@ Lift::Direction Lift::direction() const
 
 bool queuesEmpty(Queues &queues)
 {
-    for (const auto &queue : queues) {
-        if (!queue.empty()) {
-            return false;
-        }
-    }
-    return true;
+    return std::all_of(queues.begin(), queues.end(),
+                       [](auto const &queue) { return queue.empty(); });
 }
 
 void movePeopleIntoLift(std::multiset<int> &passengers,
