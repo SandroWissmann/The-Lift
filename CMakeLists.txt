@@ -1,3 +1,3 @@
 add_subdirectory(TheLift)
-add_subdirectory(tst_Lift)
+add_subdirectory(Lift_test/)
 
