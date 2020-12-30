@@ -65,7 +65,8 @@ void Lift::addPeopleWhoWantToGoUp(std::vector<int> &peopleOnFloor)
     std::vector<int> newPassengers;
 
     for (const auto &person : peopleOnFloor) {
-        if (newPassengers.size() + mPassangers.size() >= mCapacity) {
+        if (newPassengers.size() + mPassangers.size() >=
+            static_cast<std::size_t>(mCapacity)) {
             break;
         }
         if (person > mCurrentFloor) {
@@ -146,7 +147,8 @@ void Lift::addPeopleWhoWantToGoDown(std::vector<int> &peopleOnFloor)
     std::vector<int> newPassengers;
 
     for (const auto &person : peopleOnFloor) {
-        if (newPassengers.size() + mPassangers.size() >= mCapacity) {
+        if (newPassengers.size() + mPassangers.size() >=
+            static_cast<std::size_t>(mCapacity)) {
             break;
         }
         if (person < mCurrentFloor) {
@@ -256,7 +258,8 @@ std::optional<int> highestFloorAboveLiftPushedDown(int liftPos,
     for (std::size_t i = queues.size() - 1;
          i != static_cast<std::size_t>(liftPos); --i) {
         for (const auto &person : queues[i]) {
-            if (person < i) { // person wants to go down
+            if (static_cast<std::size_t>(person) <
+                i) { // person wants to go down
                 return {i};
             }
         }
@@ -271,7 +274,7 @@ std::optional<int> nextFloorAboveLiftPushedUp(int liftPos, const Queues &queues)
     }
     for (std::size_t i = liftPos + 1; i < queues.size(); ++i) {
         for (const auto &person : queues[i]) {
-            if (person > i) {
+            if (static_cast<std::size_t>(person) > i) {
                 return {i};
             }
         }
@@ -285,9 +288,10 @@ std::optional<int> nextFloorUnderLiftPushedDown(int liftPos,
     if (liftPos <= 1) {
         return {};
     }
-    for (std::size_t i = liftPos - 1; i != std::size_t(0) - 1; --i) {
+    for (std::size_t i = liftPos - 1; i != static_cast<std::size_t>(0) - 1;
+         --i) {
         for (const auto &person : queues[i]) {
-            if (person < i) {
+            if (static_cast<std::size_t>(person) < i) {
                 return {i};
             }
         }
@@ -300,7 +304,7 @@ std::optional<int> lowestFloorUnderLiftPushedUp(int liftPos,
 {
     for (std::size_t i = 0; i < static_cast<std::size_t>(liftPos); ++i) {
         for (const auto &person : queues[i]) {
-            if (person > i) { // person wants to go up
+            if (static_cast<std::size_t>(person) > i) { // person wants to go up
                 return {i};
             }
         }
