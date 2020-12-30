@@ -1,7 +1,7 @@
 #include "lift.h"
 
 Lift::Lift(const Queues &queues, int capacity)
-    : mQueues{queues}, mCapacity{capacity}
+    : mCapacity{capacity}, mQueues{queues}
 {
 }
 
