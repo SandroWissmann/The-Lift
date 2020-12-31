@@ -19,7 +19,7 @@ void Lift::emptyQueues()
         while (mDirection == Direction::down) {
             goDown();
 
-            if (queuesEmpty(mQueues) && mPassangers.empty()) {
+            if (queuesEmpty(mQueues) && mPassengers.empty()) {
                 goToStartPosition = true;
                 break;
             }
@@ -40,14 +40,14 @@ std::vector<int> Lift::visitedFloors() const
 
 void Lift::releasePassengersWithCurrentFloorDestination()
 {
-    mPassangers.erase(mCurrentFloor);
+    mPassengers.erase(mCurrentFloor);
 }
 
 void Lift::goUp()
 {
     releasePassengersWithCurrentFloorDestination();
     addPeopleWhoWantToGoUp(mQueues[mCurrentFloor]);
-    if (mPassangers.empty()) {
+    if (mPassengers.empty()) {
         if (goUpToNextFloorPushedUp()) {
             return;
         }
@@ -68,7 +68,7 @@ void Lift::addPeopleWhoWantToGoUp(std::vector<int> &peopleOnFloor)
     std::vector<int> newPassengers;
 
     for (const auto &person : peopleOnFloor) {
-        if (newPassengers.size() + mPassangers.size() >=
+        if (newPassengers.size() + mPassengers.size() >=
             static_cast<std::size_t>(mCapacity)) {
             break;
         }
@@ -77,7 +77,7 @@ void Lift::addPeopleWhoWantToGoUp(std::vector<int> &peopleOnFloor)
         }
     }
 
-    movePeopleIntoLift(mPassangers, peopleOnFloor, newPassengers);
+    movePeopleIntoLift(mPassengers, peopleOnFloor, newPassengers);
 }
 
 bool Lift::goUpToNextFloorPushedUp()
@@ -110,11 +110,11 @@ void Lift::goUpWithPassengers()
 int Lift::getNextFloorUpWithPerson() const
 {
     auto itPosPassengerUp = std::find_if(
-        mPassangers.cbegin(), mPassangers.cend(),
+        mPassengers.cbegin(), mPassengers.cend(),
         [curr = mCurrentFloor](const auto &val) { return val > curr; });
 
     // there should be always a person who wants to get higher
-    assert(itPosPassengerUp != mPassangers.cend());
+    assert(itPosPassengerUp != mPassengers.cend());
 
     auto optPosUp = nextFloorAboveLiftPushedUp(mCurrentFloor, mQueues);
     if (optPosUp && *optPosUp < *itPosPassengerUp) {
@@ -127,7 +127,7 @@ void Lift::goDown()
 {
     releasePassengersWithCurrentFloorDestination();
     addPeopleWhoWantToGoDown(mQueues[mCurrentFloor]);
-    if (mPassangers.empty()) {
+    if (mPassengers.empty()) {
         if (goDownToNextFloorPushedDown()) {
             return;
         }
@@ -150,7 +150,7 @@ void Lift::addPeopleWhoWantToGoDown(std::vector<int> &peopleOnFloor)
     std::vector<int> newPassengers;
 
     for (const auto &person : peopleOnFloor) {
-        if (newPassengers.size() + mPassangers.size() >=
+        if (newPassengers.size() + mPassengers.size() >=
             static_cast<std::size_t>(mCapacity)) {
             break;
         }
@@ -159,7 +159,7 @@ void Lift::addPeopleWhoWantToGoDown(std::vector<int> &peopleOnFloor)
         }
     }
 
-    movePeopleIntoLift(mPassangers, peopleOnFloor, newPassengers);
+    movePeopleIntoLift(mPassengers, peopleOnFloor, newPassengers);
 }
 
 bool Lift::goDownToNextFloorPushedDown()
@@ -193,10 +193,10 @@ void Lift::goDownWithPassengers()
 int Lift::getNextFloorDownWithPerson() const
 {
     auto itPosPassengerDown = std::find_if(
-        mPassangers.crbegin(), mPassangers.crend(),
+        mPassengers.crbegin(), mPassengers.crend(),
         [curr = mCurrentFloor](const auto &val) { return val < curr; });
     // there should be always a person who wants to get down
-    assert(itPosPassengerDown != mPassangers.crend());
+    assert(itPosPassengerDown != mPassengers.crend());
 
     auto optPosDown = nextFloorUnderLiftPushedDown(mCurrentFloor, mQueues);
     if (optPosDown && *optPosDown > *itPosPassengerDown) {
