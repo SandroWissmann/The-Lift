@@ -52,6 +52,7 @@ Window {
 
     RowLayout {
         ListView {
+            id: floorListView
             width: root.width / 2
             height: root.height
             Layout.fillHeight: true
@@ -69,13 +70,12 @@ Window {
                 width: root.width / 2
             }
         }
-        Rectangle {
-            width: root.width / 2
+        ElevatorShaft {
+            id: elevatorShaft
             Layout.fillHeight: true
-            Layout.margins: 0
-            id: elevatorRect
-            border.color: "black"
-            color: "lightblue"
+            width: root.width / 2
+            floorCount: testModel.count
+            currenFloor: 4
         }
     }
 }

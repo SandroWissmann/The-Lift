@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>FloorDelegate.qml</file>
+        <file>ElevatorShaft.qml</file>
     </qresource>
 </RCC>
