@@ -15,8 +15,12 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
 
 set(PROJECT_SOURCES
+        backend.h
+        backend.cpp
         lift.h
         lift.cpp
+        liftmanagerthread.h
+        liftmanagerthread.cpp
         main.cpp
         qml.qrc
 )

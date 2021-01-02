@@ -30,23 +30,5 @@ Item {
                 }
             }
         }
-
-        property bool up: true
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                if (root.currenFloor == root.floorCount - 1) {
-                    shaftRect.up = false
-                }
-                if (root.currenFloor == 0) {
-                    shaftRect.up = true
-                }
-                if (shaftRect.up) {
-                    ++root.currenFloor
-                } else {
-                    --root.currenFloor
-                }
-            }
-        }
     }
 }

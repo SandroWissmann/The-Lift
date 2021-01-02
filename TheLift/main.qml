@@ -71,11 +71,12 @@ Window {
             }
         }
         ElevatorShaft {
+            objectName: "elevatorShaftObject"
             id: elevatorShaft
             Layout.fillHeight: true
             width: root.width / 2
             floorCount: testModel.count
-            currenFloor: 4
+            currenFloor: backend.liftFloor
         }
     }
 }
