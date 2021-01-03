@@ -1,11 +1,14 @@
 #include "lift.h"
 
+#include "building.h"
+
 #include <algorithm>
 #include <cassert>
 
-Lift::Lift(const Queues &queues, int capacity)
-    : mCapacity{capacity}, mQueues{queues}
+Lift::Lift(Building *building, int capacity, QObject *parent)
+    : QObject(parent), mCapacity{capacity}, mBuilding{building}
 {
+    building->setParent(this);
 }
 
 void Lift::emptyQueues()
@@ -18,8 +21,7 @@ void Lift::emptyQueues()
         }
         while (mDirection == Direction::down) {
             goDown();
-
-            if (queuesEmpty(mQueues) && mPassengers.empty()) {
+            if (mBuilding->noPersonWaitingForLift() && mPassengers.empty()) {
                 goToStartPosition = true;
                 break;
             }
@@ -46,14 +48,14 @@ void Lift::releasePassengersWithCurrentFloorDestination()
 void Lift::goUp()
 {
     releasePassengersWithCurrentFloorDestination();
-    addPeopleWhoWantToGoUp(mQueues[mCurrentFloor]);
+    addPeopleWhoWantToGoUp(mCurrentFloor);
     if (mPassengers.empty()) {
         if (goUpToNextFloorPushedUp()) {
             return;
         }
         if (goUpToHighestFloorPushedDown()) {
             changeDirection();
-            addPeopleWhoWantToGoDown(mQueues[mCurrentFloor]);
+            addPeopleWhoWantToGoDown(mCurrentFloor);
             return;
         }
         changeDirection();
@@ -63,10 +65,11 @@ void Lift::goUp()
     }
 }
 
-void Lift::addPeopleWhoWantToGoUp(std::vector<int> &peopleOnFloor)
+void Lift::addPeopleWhoWantToGoUp(int floor)
 {
     std::vector<int> newPassengers;
 
+    auto peopleOnFloor = mBuilding->peopleOnFloorWaiting(floor);
     for (const auto &person : peopleOnFloor) {
         if (newPassengers.size() + mPassengers.size() >=
             static_cast<std::size_t>(mCapacity)) {
@@ -77,12 +80,12 @@ void Lift::addPeopleWhoWantToGoUp(std::vector<int> &peopleOnFloor)
         }
     }
 
-    movePeopleIntoLift(mPassengers, peopleOnFloor, newPassengers);
+    movePeopleIntoLift(floor, newPassengers);
 }
 
 bool Lift::goUpToNextFloorPushedUp()
 {
-    auto optNextFloorUp = nextFloorAboveLiftPushedUp(mCurrentFloor, mQueues);
+    auto optNextFloorUp = mBuilding->nextFloorAboveLiftPushedUp(mCurrentFloor);
     if (optNextFloorUp) {
         arriveToFloor(*optNextFloorUp);
         return true;
@@ -93,7 +96,7 @@ bool Lift::goUpToNextFloorPushedUp()
 bool Lift::goUpToHighestFloorPushedDown()
 {
     auto optHighestFloorDown =
-        highestFloorAboveLiftPushedDown(mCurrentFloor, mQueues);
+        mBuilding->highestFloorAboveLiftPushedDown(mCurrentFloor);
     if (optHighestFloorDown) {
         arriveToFloor(*optHighestFloorDown);
         return true;
@@ -116,7 +119,7 @@ int Lift::getNextFloorUpWithPerson() const
     // there should be always a person who wants to get higher
     assert(itPosPassengerUp != mPassengers.cend());
 
-    auto optPosUp = nextFloorAboveLiftPushedUp(mCurrentFloor, mQueues);
+    auto optPosUp = mBuilding->nextFloorAboveLiftPushedUp(mCurrentFloor);
     if (optPosUp && *optPosUp < *itPosPassengerUp) {
         return *optPosUp;
     }
@@ -126,17 +129,17 @@ int Lift::getNextFloorUpWithPerson() const
 void Lift::goDown()
 {
     releasePassengersWithCurrentFloorDestination();
-    addPeopleWhoWantToGoDown(mQueues[mCurrentFloor]);
+    addPeopleWhoWantToGoDown(mCurrentFloor);
     if (mPassengers.empty()) {
         if (goDownToNextFloorPushedDown()) {
             return;
         }
         if (goDownToLowestFloorPushedUp()) {
             changeDirection();
-            addPeopleWhoWantToGoUp(mQueues[mCurrentFloor]);
+            addPeopleWhoWantToGoUp(mCurrentFloor);
             return;
         }
-        if (!queuesEmpty(mQueues)) {
+        if (!mBuilding->noPersonWaitingForLift()) {
             changeDirection();
         }
     }
@@ -145,10 +148,11 @@ void Lift::goDown()
     }
 }
 
-void Lift::addPeopleWhoWantToGoDown(std::vector<int> &peopleOnFloor)
+void Lift::addPeopleWhoWantToGoDown(int floor)
 {
     std::vector<int> newPassengers;
 
+    auto peopleOnFloor = mBuilding->peopleOnFloorWaiting(floor);
     for (const auto &person : peopleOnFloor) {
         if (newPassengers.size() + mPassengers.size() >=
             static_cast<std::size_t>(mCapacity)) {
@@ -159,13 +163,13 @@ void Lift::addPeopleWhoWantToGoDown(std::vector<int> &peopleOnFloor)
         }
     }
 
-    movePeopleIntoLift(mPassengers, peopleOnFloor, newPassengers);
+    movePeopleIntoLift(floor, newPassengers);
 }
 
 bool Lift::goDownToNextFloorPushedDown()
 {
     auto optNextFloorDown =
-        nextFloorUnderLiftPushedDown(mCurrentFloor, mQueues);
+        mBuilding->nextFloorUnderLiftPushedDown(mCurrentFloor);
     if (optNextFloorDown) {
         arriveToFloor(*optNextFloorDown);
         return true;
@@ -176,7 +180,7 @@ bool Lift::goDownToNextFloorPushedDown()
 bool Lift::goDownToLowestFloorPushedUp()
 {
     auto optLowestFloorUp =
-        lowestFloorUnderLiftPushedUp(mCurrentFloor, mQueues);
+        mBuilding->lowestFloorUnderLiftPushedUp(mCurrentFloor);
     if (optLowestFloorUp) {
         arriveToFloor(*optLowestFloorUp);
         return true;
@@ -198,7 +202,8 @@ int Lift::getNextFloorDownWithPerson() const
     // there should be always a person who wants to get down
     assert(itPosPassengerDown != mPassengers.crend());
 
-    auto optPosDown = nextFloorUnderLiftPushedDown(mCurrentFloor, mQueues);
+    auto optPosDown = mBuilding->nextFloorUnderLiftPushedDown(mCurrentFloor);
+
     if (optPosDown && *optPosDown > *itPosPassengerDown) {
         return *optPosDown;
     }
@@ -231,84 +236,15 @@ Lift::Direction Lift::direction() const
     return mDirection;
 }
 
-bool queuesEmpty(Queues &queues)
-{
-    return std::all_of(queues.begin(), queues.end(),
-                       [](auto const &queue) { return queue.empty(); });
-}
-
-void movePeopleIntoLift(std::multiset<int> &passengers,
-                        std::vector<int> &peopleOnFloor,
-                        std::vector<int> &newPassengers)
+void Lift::movePeopleIntoLift(int floor, std::vector<int> &newPassengers)
 {
     for (const auto &newPassenger : newPassengers) {
-        peopleOnFloor.erase(std::find(peopleOnFloor.begin(),
-                                      peopleOnFloor.end(), newPassenger));
+        assert(mBuilding->removePersonFromFloor(floor, newPassenger));
     }
 
     for (const auto &newPassenger : newPassengers) {
-        passengers.insert(newPassenger);
+        mPassengers.insert(newPassenger);
     }
-}
-
-std::optional<int> highestFloorAboveLiftPushedDown(int liftPos,
-                                                   const Queues &queues)
-{
-    for (std::size_t i = queues.size() - 1;
-         i != static_cast<std::size_t>(liftPos); --i) {
-        for (const auto &person : queues[i]) {
-            if (static_cast<std::size_t>(person) <
-                i) { // person wants to go down
-                return {i};
-            }
-        }
-    }
-    return {};
-}
-
-std::optional<int> nextFloorAboveLiftPushedUp(int liftPos, const Queues &queues)
-{
-    if (std::size_t(liftPos) >= queues.size() - 2) {
-        return {};
-    }
-    for (std::size_t i = liftPos + 1; i < queues.size(); ++i) {
-        for (const auto &person : queues[i]) {
-            if (static_cast<std::size_t>(person) > i) {
-                return {i};
-            }
-        }
-    }
-    return {};
-}
-
-std::optional<int> nextFloorUnderLiftPushedDown(int liftPos,
-                                                const Queues &queues)
-{
-    if (liftPos <= 1) {
-        return {};
-    }
-    for (std::size_t i = liftPos - 1; i != static_cast<std::size_t>(0) - 1;
-         --i) {
-        for (const auto &person : queues[i]) {
-            if (static_cast<std::size_t>(person) < i) {
-                return {i};
-            }
-        }
-    }
-    return {};
-}
-
-std::optional<int> lowestFloorUnderLiftPushedUp(int liftPos,
-                                                const Queues &queues)
-{
-    for (std::size_t i = 0; i < static_cast<std::size_t>(liftPos); ++i) {
-        for (const auto &person : queues[i]) {
-            if (static_cast<std::size_t>(person) > i) { // person wants to go up
-                return {i};
-            }
-        }
-    }
-    return {};
 }
 
 std::optional<int>

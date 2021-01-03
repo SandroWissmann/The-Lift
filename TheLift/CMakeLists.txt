@@ -17,6 +17,8 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
 set(PROJECT_SOURCES
         backend.h
         backend.cpp
+        building.h
+        building.cpp
         lift.h
         lift.cpp
         liftmanagerthread.h

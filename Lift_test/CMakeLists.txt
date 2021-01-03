@@ -19,6 +19,7 @@ add_executable(
     Lift_test
     tst_lift_test.cpp
     ../TheLift/lift.cpp
+    ../TheLift/building.cpp
     )
 add_test(NAME Lift_test COMMAND Lift_test)
 

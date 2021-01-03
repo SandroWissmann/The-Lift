@@ -1,15 +1,18 @@
 #ifndef LIFT_H
 #define LIFT_H
 
+#include <QObject>
+
 #include <optional>
 #include <set>
 #include <vector>
 
-using Queues = std::vector<std::vector<int>>;
+class Building;
 
-class Lift {
+class Lift : public QObject {
+    Q_OBJECT
 public:
-    Lift(const Queues &queues, int capacity);
+    Lift(Building *building, int capacity, QObject *parent = nullptr);
 
     void emptyQueues();
 
@@ -22,7 +25,7 @@ private:
 
     void goUp();
 
-    void addPeopleWhoWantToGoUp(std::vector<int> &peopleOnFloor);
+    void addPeopleWhoWantToGoUp(int floor);
 
     bool goUpWithoutPassengers();
 
@@ -35,7 +38,7 @@ private:
 
     void goDown();
 
-    void addPeopleWhoWantToGoDown(std::vector<int> &peopleOnFloor);
+    void addPeopleWhoWantToGoDown(int floor);
 
     bool goDownWithoutPassengers();
 
@@ -53,32 +56,16 @@ private:
     void changeDirection();
     Direction direction() const;
 
+    void movePeopleIntoLift(int floor, std::vector<int> &newPassengers);
+
     std::multiset<int> mPassengers{};
     std::vector<int> mVisitedFloors{};
     Direction mDirection = Direction::up;
     int mCurrentFloor = 0;
     int mCapacity;
 
-    Queues mQueues;
+    Building *mBuilding;
 };
-
-bool queuesEmpty(Queues &queues);
-
-void movePeopleIntoLift(std::multiset<int> &passengers,
-                        std::vector<int> &peopleOnFloor,
-                        std::vector<int> &newPassengers);
-
-std::optional<int> highestFloorAboveLiftPushedDown(int liftPos,
-                                                   const Queues &queues);
-
-std::optional<int> nextFloorAboveLiftPushedUp(int liftPos,
-                                              const Queues &queues);
-
-std::optional<int> nextFloorUnderLiftPushedDown(int liftPos,
-                                                const Queues &queues);
-
-std::optional<int> lowestFloorUnderLiftPushedUp(int liftPos,
-                                                const Queues &queues);
 
 std::optional<int>
 passengerDestinationLowerThanLiftPos(int liftPos,

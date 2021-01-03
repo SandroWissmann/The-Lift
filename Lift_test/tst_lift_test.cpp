@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QtTest>
 
+#include "../TheLift/building.h"
 #include "../TheLift/lift.h"
 
 class Lift_test : public QObject {
@@ -104,9 +105,10 @@ void Lift_test::test_getFloors()
     QFETCH(int, capacity);
     QFETCH(std::vector<int>, expectedFloorsVisited);
 
-    Lift lift(queues, capacity);
-    //    lift.emptyQueues();
-    //    QCOMPARE(lift.visitedFloors(), expectedFloorsVisited);
+    Building *building = new Building(queues);
+    Lift lift(building, capacity);
+    lift.emptyQueues();
+    QCOMPARE(lift.visitedFloors(), expectedFloorsVisited);
 }
 
 QTEST_APPLESS_MAIN(Lift_test)
