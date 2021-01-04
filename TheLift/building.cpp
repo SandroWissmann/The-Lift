@@ -1,10 +1,12 @@
 #include "building.h"
 
 #include <algorithm>
+#include <cassert>
 
 Building::Building(const std::vector<std::vector<int>> &queues, QObject *parent)
     : QObject(parent), mQueues{queues}
 {
+    assert(queues.size() > 0);
 }
 
 bool Building::noPersonWaitingForLift() const
@@ -76,16 +78,40 @@ std::vector<int> Building::peopleOnFloorWaiting(int floor) const
     return mQueues[floor];
 }
 
-bool Building::removePersonFromFloor(int floor, int person)
+std::vector<int> Building::removePeopleWhoWantToGoDown(int maxSize, int floor)
 {
-    assert(floor >= 0 && floor < static_cast<int>(mQueues.size()));
+    std::vector<int> peopleWhoWantToGoDown;
+    std::vector<int> remainingPersons;
 
-    auto it = std::find(mQueues[floor].begin(), mQueues[floor].end(), person);
-    if (it == mQueues[floor].end()) {
-        return false;
+    for (const auto &person : mQueues[floor]) {
+        if (peopleWhoWantToGoDown.size() < static_cast<std::size_t>(maxSize) &&
+            person < floor) {
+            peopleWhoWantToGoDown.push_back(person);
+        }
+        else {
+            remainingPersons.push_back(person);
+        }
     }
-    mQueues[floor].erase(it);
-    return true;
+    std::swap(mQueues[floor], remainingPersons);
+    return peopleWhoWantToGoDown;
+}
+
+std::vector<int> Building::removePeopleWhoWantToGoUp(int maxSize, int floor)
+{
+    std::vector<int> peopleWhoWantToGoUp;
+    std::vector<int> remainingPersons;
+
+    for (const auto &person : mQueues[floor]) {
+        if (peopleWhoWantToGoUp.size() < static_cast<std::size_t>(maxSize) &&
+            person > floor) {
+            peopleWhoWantToGoUp.push_back(person);
+        }
+        else {
+            remainingPersons.push_back(person);
+        }
+    }
+    std::swap(mQueues[floor], remainingPersons);
+    return peopleWhoWantToGoUp;
 }
 
 int Building::floorsCount() const

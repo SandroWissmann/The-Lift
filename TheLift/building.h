@@ -21,7 +21,9 @@ public:
 
     std::vector<int> peopleOnFloorWaiting(int floor) const;
 
-    bool removePersonFromFloor(int floor, int person);
+    std::vector<int> removePeopleWhoWantToGoDown(int maxSize, int floor);
+
+    std::vector<int> removePeopleWhoWantToGoUp(int maxSize, int floor);
 
     int floorsCount() const;
 

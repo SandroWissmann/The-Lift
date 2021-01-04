@@ -8,6 +8,8 @@
 Lift::Lift(Building *building, int capacity, QObject *parent)
     : QObject(parent), mCapacity{capacity}, mBuilding{building}
 {
+    assert(capacity > 0);
+    assert(building->floorsCount() > 0);
     building->setParent(this);
 }
 
@@ -48,14 +50,14 @@ void Lift::releasePassengersWithCurrentFloorDestination()
 void Lift::goUp()
 {
     releasePassengersWithCurrentFloorDestination();
-    addPeopleWhoWantToGoUp(mCurrentFloor);
+    addPeopleWhoWantToGoUp();
     if (mPassengers.empty()) {
         if (goUpToNextFloorPushedUp()) {
             return;
         }
         if (goUpToHighestFloorPushedDown()) {
             changeDirection();
-            addPeopleWhoWantToGoDown(mCurrentFloor);
+            addPeopleWhoWantToGoDown();
             return;
         }
         changeDirection();
@@ -65,22 +67,11 @@ void Lift::goUp()
     }
 }
 
-void Lift::addPeopleWhoWantToGoUp(int floor)
+void Lift::addPeopleWhoWantToGoUp()
 {
-    std::vector<int> newPassengers;
-
-    auto peopleOnFloor = mBuilding->peopleOnFloorWaiting(floor);
-    for (const auto &person : peopleOnFloor) {
-        if (newPassengers.size() + mPassengers.size() >=
-            static_cast<std::size_t>(mCapacity)) {
-            break;
-        }
-        if (person > mCurrentFloor) {
-            newPassengers.push_back(person);
-        }
-    }
-
-    movePeopleIntoLift(floor, newPassengers);
+    auto newPassengers = mBuilding->removePeopleWhoWantToGoUp(
+        mCapacity - mPassengers.size(), mCurrentFloor);
+    mPassengers.insert(newPassengers.begin(), newPassengers.end());
 }
 
 bool Lift::goUpToNextFloorPushedUp()
@@ -129,14 +120,14 @@ int Lift::getNextFloorUpWithPerson() const
 void Lift::goDown()
 {
     releasePassengersWithCurrentFloorDestination();
-    addPeopleWhoWantToGoDown(mCurrentFloor);
+    addPeopleWhoWantToGoDown();
     if (mPassengers.empty()) {
         if (goDownToNextFloorPushedDown()) {
             return;
         }
         if (goDownToLowestFloorPushedUp()) {
             changeDirection();
-            addPeopleWhoWantToGoUp(mCurrentFloor);
+            addPeopleWhoWantToGoUp();
             return;
         }
         if (!mBuilding->noPersonWaitingForLift()) {
@@ -148,22 +139,11 @@ void Lift::goDown()
     }
 }
 
-void Lift::addPeopleWhoWantToGoDown(int floor)
+void Lift::addPeopleWhoWantToGoDown()
 {
-    std::vector<int> newPassengers;
-
-    auto peopleOnFloor = mBuilding->peopleOnFloorWaiting(floor);
-    for (const auto &person : peopleOnFloor) {
-        if (newPassengers.size() + mPassengers.size() >=
-            static_cast<std::size_t>(mCapacity)) {
-            break;
-        }
-        if (person < mCurrentFloor) {
-            newPassengers.push_back(person);
-        }
-    }
-
-    movePeopleIntoLift(floor, newPassengers);
+    auto newPassengers = mBuilding->removePeopleWhoWantToGoDown(
+        mCapacity - mPassengers.size(), mCurrentFloor);
+    mPassengers.insert(newPassengers.begin(), newPassengers.end());
 }
 
 bool Lift::goDownToNextFloorPushedDown()
@@ -236,39 +216,28 @@ Lift::Direction Lift::direction() const
     return mDirection;
 }
 
-void Lift::movePeopleIntoLift(int floor, std::vector<int> &newPassengers)
-{
-    for (const auto &newPassenger : newPassengers) {
-        assert(mBuilding->removePersonFromFloor(floor, newPassenger));
-    }
+// std::optional<int>
+// passengerDestinationLowerThanLiftPos(int liftPos,
+//                                     const std::multiset<int> &passengers)
+//{
+//    auto it = std::find_if(
+//        passengers.crbegin(), passengers.crend(),
+//        [curr = liftPos](int passenger) { return passenger < curr; });
+//    if (it != passengers.crend()) {
+//        return {*it};
+//    }
+//    return {};
+//}
 
-    for (const auto &newPassenger : newPassengers) {
-        mPassengers.insert(newPassenger);
-    }
-}
-
-std::optional<int>
-passengerDestinationLowerThanLiftPos(int liftPos,
-                                     const std::multiset<int> &passengers)
-{
-    auto it = std::find_if(
-        passengers.crbegin(), passengers.crend(),
-        [curr = liftPos](int passenger) { return passenger < curr; });
-    if (it != passengers.crend()) {
-        return {*it};
-    }
-    return {};
-}
-
-std::optional<int>
-passengerDestinationHigherThanLiftPos(int liftPos,
-                                      const std::multiset<int> &passengers)
-{
-    auto it = std::find_if(
-        passengers.cbegin(), passengers.cend(),
-        [curr = liftPos](int passenger) { return passenger > curr; });
-    if (it != passengers.cend()) {
-        return {*it};
-    }
-    return {};
-}
+// std::optional<int>
+// passengerDestinationHigherThanLiftPos(int liftPos,
+//                                      const std::multiset<int> &passengers)
+//{
+//    auto it = std::find_if(
+//        passengers.cbegin(), passengers.cend(),
+//        [curr = liftPos](int passenger) { return passenger > curr; });
+//    if (it != passengers.cend()) {
+//        return {*it};
+//    }
+//    return {};
+//}

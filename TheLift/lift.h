@@ -25,7 +25,7 @@ private:
 
     void goUp();
 
-    void addPeopleWhoWantToGoUp(int floor);
+    void addPeopleWhoWantToGoUp();
 
     bool goUpWithoutPassengers();
 
@@ -38,7 +38,7 @@ private:
 
     void goDown();
 
-    void addPeopleWhoWantToGoDown(int floor);
+    void addPeopleWhoWantToGoDown();
 
     bool goDownWithoutPassengers();
 
@@ -55,8 +55,6 @@ private:
 
     void changeDirection();
     Direction direction() const;
-
-    void movePeopleIntoLift(int floor, std::vector<int> &newPassengers);
 
     std::multiset<int> mPassengers{};
     std::vector<int> mVisitedFloors{};
