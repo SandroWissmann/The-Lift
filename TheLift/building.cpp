@@ -47,7 +47,7 @@ std::optional<int> Building::nextFloorUnderLiftPushedDown(int liftPos) const
     if (liftPos <= 1) {
         return {};
     }
-    for (int i = liftPos - 1; i < 0; --i) {
+    for (int i = liftPos - 1; i >= 0; --i) {
         for (const auto &person : mQueues[i]) {
             if (person < i) {
                 return {i};

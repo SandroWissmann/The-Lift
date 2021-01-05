@@ -77,12 +77,6 @@ void Lift_test::test_getFloors_data()
                                  {0, 0, 0, 0}}
         << 5 << QVector<int>{0, 6, 5, 4, 3, 2, 1, 0, 5, 4, 3, 2, 1,
                              0, 4, 3, 2, 1, 0, 3, 2, 1, 0, 1, 0};
-    //    QTest::newRow("no floors (seg fault)")
-    //        << QVector<QVector<int>>{} << 1 << QVector<int>{0};
-    QTest::newRow("no capacity")
-        << QVector<QVector<int>>{{1}, {}} << 0 << QVector<int>{0};
-    QTest::newRow("passenger not changing floor (infinite loop)")
-        << QVector<QVector<int>>{{0}} << 1 << QVector<int>{0};
 }
 
 void Lift_test::test_getFloors()
