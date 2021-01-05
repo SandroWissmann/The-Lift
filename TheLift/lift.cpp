@@ -37,7 +37,7 @@ void Lift::emptyQueues()
     }
 }
 
-std::vector<int> Lift::visitedFloors() const
+QVector<int> Lift::visitedFloors() const
 {
     return mVisitedFloors;
 }
@@ -215,29 +215,3 @@ Lift::Direction Lift::direction() const
 {
     return mDirection;
 }
-
-// std::optional<int>
-// passengerDestinationLowerThanLiftPos(int liftPos,
-//                                     const std::multiset<int> &passengers)
-//{
-//    auto it = std::find_if(
-//        passengers.crbegin(), passengers.crend(),
-//        [curr = liftPos](int passenger) { return passenger < curr; });
-//    if (it != passengers.crend()) {
-//        return {*it};
-//    }
-//    return {};
-//}
-
-// std::optional<int>
-// passengerDestinationHigherThanLiftPos(int liftPos,
-//                                      const std::multiset<int> &passengers)
-//{
-//    auto it = std::find_if(
-//        passengers.cbegin(), passengers.cend(),
-//        [curr = liftPos](int passenger) { return passenger > curr; });
-//    if (it != passengers.cend()) {
-//        return {*it};
-//    }
-//    return {};
-//}

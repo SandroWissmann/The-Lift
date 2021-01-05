@@ -2,11 +2,12 @@
 #define BUILDING_H
 
 #include <QObject>
+#include <QVector>
 
 class Building : public QObject {
     Q_OBJECT
 public:
-    explicit Building(const std::vector<std::vector<int>> &queues,
+    explicit Building(const QVector<QVector<int>> &queues,
                       QObject *parent = nullptr);
 
     bool noPersonWaitingForLift() const;
@@ -19,16 +20,16 @@ public:
 
     std::optional<int> lowestFloorUnderLiftPushedUp(int liftPos) const;
 
-    std::vector<int> peopleOnFloorWaiting(int floor) const;
+    QVector<int> peopleOnFloorWaiting(int floor) const;
 
-    std::vector<int> removePeopleWhoWantToGoDown(int maxSize, int floor);
+    QVector<int> removePeopleWhoWantToGoDown(int maxSize, int floor);
 
-    std::vector<int> removePeopleWhoWantToGoUp(int maxSize, int floor);
+    QVector<int> removePeopleWhoWantToGoUp(int maxSize, int floor);
 
     int floorsCount() const;
 
 private:
-    std::vector<std::vector<int>> mQueues;
+    QVector<QVector<int>> mQueues;
 };
 
 #endif // BUILDING_H

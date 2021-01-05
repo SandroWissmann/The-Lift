@@ -2,10 +2,10 @@
 #define LIFT_H
 
 #include <QObject>
+#include <QVector>
 
 #include <optional>
 #include <set>
-#include <vector>
 
 class Building;
 
@@ -16,7 +16,7 @@ public:
 
     void emptyQueues();
 
-    std::vector<int> visitedFloors() const;
+    QVector<int> visitedFloors() const;
 
     enum class Direction { up, down };
 
@@ -57,20 +57,12 @@ private:
     Direction direction() const;
 
     std::multiset<int> mPassengers{};
-    std::vector<int> mVisitedFloors{};
+    QVector<int> mVisitedFloors{};
     Direction mDirection = Direction::up;
     int mCurrentFloor = 0;
     int mCapacity;
 
     Building *mBuilding;
 };
-
-std::optional<int>
-passengerDestinationLowerThanLiftPos(int liftPos,
-                                     const std::multiset<int> &passengers);
-
-std::optional<int>
-passengerDestinationHigherThanLiftPos(int liftPos,
-                                      const std::multiset<int> &passengers);
 
 #endif // LIFT_H
