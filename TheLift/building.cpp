@@ -9,7 +9,7 @@ Building::Building(const QVector<QVector<int>> &queues, QObject *parent)
     assert(queues.size() > 0);
 }
 
-bool Building::noPersonWaitingForLift() const
+bool Building::allQueuesEmpty() const
 {
     return std::all_of(mQueues.begin(), mQueues.end(),
                        [](auto const &queue) { return queue.empty(); });
@@ -89,6 +89,10 @@ QVector<int> Building::removePeopleWhoWantToGoDown(int maxSize, int floor)
         }
     }
     std::swap(mQueues[floor], remainingPersons);
+    emit peopleRequestingLiftChanged(mQueues[floor], floor);
+    if (allQueuesEmpty()) {
+        emit noPeopleWaiting();
+    }
     return peopleWhoWantToGoDown;
 }
 
@@ -106,10 +110,21 @@ QVector<int> Building::removePeopleWhoWantToGoUp(int maxSize, int floor)
         }
     }
     std::swap(mQueues[floor], remainingPersons);
+    emit peopleRequestingLiftChanged(mQueues[floor], floor);
+    if (allQueuesEmpty()) {
+        emit noPeopleWaiting();
+    }
     return peopleWhoWantToGoUp;
 }
 
 int Building::floorsCount() const
 {
     return mQueues.size();
+}
+
+void Building::addPerson(int person, int floor)
+{
+    assert(person != floor);
+    mQueues[floor].push_back(floor);
+    emit peopleRequestingLiftChanged(mQueues[floor], floor);
 }

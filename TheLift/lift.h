@@ -20,6 +20,10 @@ public:
 
     enum class Direction { up, down };
 
+signals:
+    void arrivedToNewFloor(int floor);
+    void passengersChanged(QVector<int> passengers);
+
 private:
     void releasePassengersWithCurrentFloorDestination();
 

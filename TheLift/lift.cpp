@@ -23,7 +23,7 @@ void Lift::emptyQueues()
         }
         while (mDirection == Direction::down) {
             goDown();
-            if (mBuilding->noPersonWaitingForLift() && mPassengers.empty()) {
+            if (mBuilding->allQueuesEmpty() && mPassengers.empty()) {
                 goToStartPosition = true;
                 break;
             }
@@ -45,6 +45,8 @@ QVector<int> Lift::visitedFloors() const
 void Lift::releasePassengersWithCurrentFloorDestination()
 {
     mPassengers.erase(mCurrentFloor);
+    emit passengersChanged(
+        QVector<int>{mPassengers.begin(), mPassengers.end()});
 }
 
 void Lift::goUp()
@@ -72,6 +74,8 @@ void Lift::addPeopleWhoWantToGoUp()
     auto newPassengers = mBuilding->removePeopleWhoWantToGoUp(
         mCapacity - mPassengers.size(), mCurrentFloor);
     mPassengers.insert(newPassengers.begin(), newPassengers.end());
+    emit passengersChanged(
+        QVector<int>{mPassengers.begin(), mPassengers.end()});
 }
 
 bool Lift::goUpToNextFloorPushedUp()
@@ -130,7 +134,7 @@ void Lift::goDown()
             addPeopleWhoWantToGoUp();
             return;
         }
-        if (!mBuilding->noPersonWaitingForLift()) {
+        if (!mBuilding->allQueuesEmpty()) {
             changeDirection();
         }
     }
@@ -144,6 +148,8 @@ void Lift::addPeopleWhoWantToGoDown()
     auto newPassengers = mBuilding->removePeopleWhoWantToGoDown(
         mCapacity - mPassengers.size(), mCurrentFloor);
     mPassengers.insert(newPassengers.begin(), newPassengers.end());
+    emit passengersChanged(
+        QVector<int>{mPassengers.begin(), mPassengers.end()});
 }
 
 bool Lift::goDownToNextFloorPushedDown()
@@ -194,6 +200,7 @@ void Lift::arriveToFloor(int floor)
 {
     mCurrentFloor = floor;
     mVisitedFloors.push_back(mCurrentFloor);
+    emit arrivedToNewFloor(floor);
 }
 
 int Lift::currentFloor() const

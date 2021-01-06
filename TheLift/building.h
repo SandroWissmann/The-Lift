@@ -10,7 +10,7 @@ public:
     explicit Building(const QVector<QVector<int>> &queues,
                       QObject *parent = nullptr);
 
-    bool noPersonWaitingForLift() const;
+    bool allQueuesEmpty() const;
 
     std::optional<int> highestFloorAboveLiftPushedDown(int liftPos) const;
 
@@ -27,6 +27,13 @@ public:
     QVector<int> removePeopleWhoWantToGoUp(int maxSize, int floor);
 
     int floorsCount() const;
+
+public slots:
+    void addPerson(int person, int floor);
+
+signals:
+    void peopleRequestingLiftChanged(const QVector<int> persons, int floor);
+    void noPeopleWaiting();
 
 private:
     QVector<QVector<int>> mQueues;
