@@ -87,8 +87,15 @@ void Lift_test::test_getFloors()
 
     Building *building = new Building(queues);
     Lift lift(building, capacity);
-    lift.emptyQueues();
-    QCOMPARE(lift.visitedFloors(), expectedFloorsVisited);
+
+    QVector<int> visitedFloors;
+    visitedFloors.push_back(lift.currentFloor());
+    while (!(building->allQueuesEmpty() && !lift.hasPassengers() &&
+             lift.currentFloor() == 0)) {
+        lift.goToNextFloor();
+        visitedFloors.push_back(lift.currentFloor());
+    }
+    QCOMPARE(visitedFloors, expectedFloorsVisited);
 }
 
 QTEST_APPLESS_MAIN(Lift_test)

@@ -13,33 +13,34 @@ Lift::Lift(Building *building, int capacity, QObject *parent)
     building->setParent(this);
 }
 
-void Lift::emptyQueues()
+void Lift::goToNextFloor()
 {
-    arriveToFloor(0);
-    bool goToStartPosition = false;
-    for (;;) {
-        while (mDirection == Direction::up) {
-            goUp();
+    if (mDirection == Direction::up) {
+        if (!goUp()) {
+            goToNextFloor();
         }
-        while (mDirection == Direction::down) {
-            goDown();
-            if (mBuilding->allQueuesEmpty() && mPassengers.empty()) {
-                goToStartPosition = true;
-                break;
+    }
+    else if (mDirection == Direction::down) {
+        if (mBuilding->allQueuesEmpty() && mPassengers.empty()) {
+            arriveToFloor(0);
+        }
+        else {
+            if (!goDown()) {
+                goToNextFloor();
             }
         }
-        if (goToStartPosition) {
-            break;
-        }
     }
-    if (mCurrentFloor != 0) {
-        arriveToFloor(0);
-    }
+    releasePassengersWithCurrentFloorDestination();
 }
 
-QVector<int> Lift::visitedFloors() const
+bool Lift::hasPassengers() const
 {
-    return mVisitedFloors;
+    return !mPassengers.empty();
+}
+
+int Lift::currentFloor() const
+{
+    return mCurrentFloor;
 }
 
 void Lift::releasePassengersWithCurrentFloorDestination()
@@ -49,24 +50,25 @@ void Lift::releasePassengersWithCurrentFloorDestination()
         QVector<int>{mPassengers.begin(), mPassengers.end()});
 }
 
-void Lift::goUp()
+bool Lift::goUp()
 {
-    releasePassengersWithCurrentFloorDestination();
     addPeopleWhoWantToGoUp();
     if (mPassengers.empty()) {
         if (goUpToNextFloorPushedUp()) {
-            return;
+            return true;
         }
         if (goUpToHighestFloorPushedDown()) {
             changeDirection();
             addPeopleWhoWantToGoDown();
-            return;
+            return true;
         }
         changeDirection();
+        return false;
     }
     else {
         goUpWithPassengers();
     }
+    return true;
 }
 
 void Lift::addPeopleWhoWantToGoUp()
@@ -121,26 +123,27 @@ int Lift::getNextFloorUpWithPerson() const
     return *itPosPassengerUp;
 }
 
-void Lift::goDown()
+bool Lift::goDown()
 {
-    releasePassengersWithCurrentFloorDestination();
     addPeopleWhoWantToGoDown();
     if (mPassengers.empty()) {
         if (goDownToNextFloorPushedDown()) {
-            return;
+            return true;
         }
         if (goDownToLowestFloorPushedUp()) {
             changeDirection();
             addPeopleWhoWantToGoUp();
-            return;
+            return true;
         }
         if (!mBuilding->allQueuesEmpty()) {
             changeDirection();
+            return false;
         }
     }
     else {
         goDownWithPassengers();
     }
+    return true;
 }
 
 void Lift::addPeopleWhoWantToGoDown()
@@ -199,13 +202,7 @@ int Lift::getNextFloorDownWithPerson() const
 void Lift::arriveToFloor(int floor)
 {
     mCurrentFloor = floor;
-    mVisitedFloors.push_back(mCurrentFloor);
     emit arrivedToNewFloor(floor);
-}
-
-int Lift::currentFloor() const
-{
-    return mCurrentFloor;
 }
 
 void Lift::changeDirection()

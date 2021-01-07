@@ -14,9 +14,10 @@ class Lift : public QObject {
 public:
     Lift(Building *building, int capacity, QObject *parent = nullptr);
 
-    void emptyQueues();
+    void goToNextFloor();
 
-    QVector<int> visitedFloors() const;
+    bool hasPassengers() const;
+    int currentFloor() const;
 
     enum class Direction { up, down };
 
@@ -27,7 +28,7 @@ signals:
 private:
     void releasePassengersWithCurrentFloorDestination();
 
-    void goUp();
+    bool goUp();
 
     void addPeopleWhoWantToGoUp();
 
@@ -40,7 +41,7 @@ private:
 
     int getNextFloorUpWithPerson() const;
 
-    void goDown();
+    bool goDown();
 
     void addPeopleWhoWantToGoDown();
 
@@ -55,13 +56,10 @@ private:
 
     void arriveToFloor(int floor);
 
-    int currentFloor() const;
-
     void changeDirection();
     Direction direction() const;
 
     std::multiset<int> mPassengers{};
-    QVector<int> mVisitedFloors{};
     Direction mDirection = Direction::up;
     int mCurrentFloor = 0;
     int mCapacity;
