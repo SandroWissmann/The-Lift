@@ -3,18 +3,19 @@
 
 #include <QObject>
 #include <QThread>
+#include <QVector>
 
 class LiftManagerThread : public QThread {
     Q_OBJECT
 public:
-signals:
-    void liftLevelChanged(int currenLevel);
-
 private:
     void run() override;
 
-    int mLevel{0};
-    bool mUp{true};
+    int mLevel;
+    bool mUp;
+
+private slots:
+    void goToNextFloor();
 };
 
 #endif // LIFTMANAGERTHREAD_H
