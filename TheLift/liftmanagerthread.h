@@ -8,6 +8,9 @@
 class LiftManagerThread : public QThread {
     Q_OBJECT
 public:
+signals:
+    void liftLevelChanged(int level);
+
 private:
     void run() override;
 
