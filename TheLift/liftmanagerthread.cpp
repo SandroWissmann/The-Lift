@@ -4,26 +4,25 @@
 
 void LiftManagerThread::run()
 {
+    QVector<QVector<int>> queues{{},           {0, 0, 0, 0}, {0, 0, 0, 0},
+                                 {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0},
+                                 {0, 0, 0, 0}};
+    int capacity = 5;
+
+    mBuilding.reset(new Building(queues));
+    mLift.reset(new Lift(mBuilding.get(), capacity));
+
+    connect(mLift.get(), &Lift::arrivedToNewFloor, this,
+            &LiftManagerThread::liftLevelChanged);
+
+    emit liftLevelChanged(mLift->currentFloor());
+
     QTimer::singleShot(0, this, &LiftManagerThread::goToNextFloor);
     exec();
 }
 
 void LiftManagerThread::goToNextFloor()
 {
-    constexpr int maxLevel = 7;
-    if (mUp) {
-        ++mLevel;
-        emit liftLevelChanged(mLevel);
-    }
-    else {
-        --mLevel;
-        emit liftLevelChanged(mLevel);
-    }
-    if (mLevel >= maxLevel) {
-        mUp = false;
-    }
-    if (mLevel <= 0) {
-        mUp = true;
-    }
-    QTimer::singleShot(500, this, &LiftManagerThread::goToNextFloor);
+    mLift->goToNextFloor();
+    QTimer::singleShot(2000, this, &LiftManagerThread::goToNextFloor);
 }

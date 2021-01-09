@@ -14,12 +14,12 @@ class Lift : public QObject {
 public:
     Lift(Building *building, int capacity, QObject *parent = nullptr);
 
-    void goToNextFloor();
-
     bool hasPassengers() const;
     int currentFloor() const;
 
     enum class Direction { up, down };
+
+    void goToNextFloor();
 
 signals:
     void arrivedToNewFloor(int floor);

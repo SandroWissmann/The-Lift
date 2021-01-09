@@ -44,10 +44,6 @@ Window {
             name: "6"
             person: ""
         }
-        ListElement {
-            name: "7"
-            person: "1 3 4"
-        }
     }
 
     RowLayout {

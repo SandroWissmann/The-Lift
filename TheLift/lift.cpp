@@ -10,7 +10,16 @@ Lift::Lift(Building *building, int capacity, QObject *parent)
 {
     assert(capacity > 0);
     assert(building->floorsCount() > 0);
-    building->setParent(this);
+}
+
+bool Lift::hasPassengers() const
+{
+    return !mPassengers.empty();
+}
+
+int Lift::currentFloor() const
+{
+    return mCurrentFloor;
 }
 
 void Lift::goToNextFloor()
@@ -31,16 +40,6 @@ void Lift::goToNextFloor()
         }
     }
     releasePassengersWithCurrentFloorDestination();
-}
-
-bool Lift::hasPassengers() const
-{
-    return !mPassengers.empty();
-}
-
-int Lift::currentFloor() const
-{
-    return mCurrentFloor;
 }
 
 void Lift::releasePassengersWithCurrentFloorDestination()
