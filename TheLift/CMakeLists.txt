@@ -19,6 +19,10 @@ set(PROJECT_SOURCES
         backend.cpp
         building.h
         building.cpp
+        floor.h
+        floor.cpp
+        floormodel.h
+        floormodel.cpp
         lift.h
         lift.cpp
         liftmanagerthread.h
