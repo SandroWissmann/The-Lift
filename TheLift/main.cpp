@@ -6,6 +6,8 @@
 #include <QScopedPointer>
 
 #include "backend.h"
+#include "floor.h"
+#include "floormodel.h"
 #include "liftmanagerthread.h"
 
 int main(int argc, char *argv[])
@@ -24,6 +26,10 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     auto context = engine.rootContext();
     context->setContextProperty("backend", &backEnd);
+
+    FloorModel floorModel{7};
+    engine.setInitialProperties(
+        {{"floorModel", QVariant::fromValue(&floorModel)}});
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(

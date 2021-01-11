@@ -11,10 +11,6 @@ public:
 
     enum FloorRoles { PeopleWithDestinationsRole = Qt::UserRole + 1 };
 
-    QModelIndex index(int row, int column, const QModelIndex &parent) const;
-
-    QModelIndex parent(const QModelIndex &child) const;
-
     int rowCount(const QModelIndex &parent) const;
 
     int columnCount(const QModelIndex &parent) const;

@@ -7,6 +7,8 @@ class Floor {
 public:
     Floor(const QVector<int> &peopleWithDestinations = {});
 
+    QString asString() const;
+
 private:
     QVector<int> mPeopleWithDestinations;
 };

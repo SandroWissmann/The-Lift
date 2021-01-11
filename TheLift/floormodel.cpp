@@ -3,6 +3,9 @@
 FloorModel::FloorModel(int floorCount, QObject *parent)
     : QAbstractListModel(parent), mFloors{QVector<Floor>(floorCount, Floor{})}
 {
+    // test
+    mFloors[0] = Floor{QVector<int>{1, 2, 3, 4}};
+    mFloors[6] = Floor{QVector<int>{4, 3, 2, 1}};
 }
 
 int FloorModel::rowCount(const QModelIndex &parent) const
@@ -24,10 +27,10 @@ QVariant FloorModel::data(const QModelIndex &index, int role) const
     }
 
     if (role == Qt::DisplayRole) {
-        return QVariant::fromValue<Floor>(mFloors[index.row()]);
+        return mFloors[index.row()].asString();
     }
     if (role == PeopleWithDestinationsRole) {
-        return QVariant::fromValue<Floor>(mFloors[index.row()]);
+        return mFloors[index.row()].asString();
     }
     return QVariant{};
 }
