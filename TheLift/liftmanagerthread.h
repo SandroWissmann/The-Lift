@@ -16,7 +16,9 @@ class LiftManagerThread : public QThread {
     Q_OBJECT
 public:
 signals:
+    void addEmptyFloors(int count);
     void liftLevelChanged(int level);
+    void peopleOnFloorChanged(const QVector<int> &peopleOnFloor, int level);
 
 private slots:
     void goToNextFloor();

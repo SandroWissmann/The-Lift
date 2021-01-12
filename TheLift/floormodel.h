@@ -7,7 +7,7 @@
 
 class FloorModel : public QAbstractListModel {
 public:
-    FloorModel(int floorCount, QObject *parent = nullptr);
+    FloorModel(QObject *parent = nullptr);
 
     enum FloorRoles { PeopleWithDestinationsRole = Qt::UserRole + 1 };
 
@@ -19,8 +19,13 @@ public:
 
     QHash<int, QByteArray> roleNames() const;
 
+    void addEmptyFloors(int count);
+    void changeFloor(int level, const Floor &floor);
+
 private:
     QVector<Floor> mFloors;
 };
+
+QVector<Floor> initFloors(int floorCount);
 
 #endif // FLOORMODEL_H

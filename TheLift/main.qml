@@ -9,8 +9,9 @@ Window {
     visible: true
     title: qsTr("the Lift")
 
-    property alias floorModel : floorListView.model
-    property int floorCount: root.floorModel.rowCount()
+    property alias floorModel: floorListView.model
+    //property int floorCount: root.floorModel.rowCount()
+    property int floorCount: 7
 
     minimumWidth: width
     maximumWidth: width
@@ -30,8 +31,6 @@ Window {
 
             contentHeight: root.height
             contentWidth: root.width / 2
-
-            required model
 
             delegate: FloorDelegate {
                 height: root.height / root.floorCount

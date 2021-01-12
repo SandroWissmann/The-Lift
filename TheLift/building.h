@@ -10,6 +10,8 @@ public:
     explicit Building(const QVector<QVector<int>> &queues,
                       QObject *parent = nullptr);
 
+    void sendAllPeopleRequestingLift();
+
     bool allQueuesEmpty() const;
 
     std::optional<int> highestFloorAboveLiftPushedDown(int liftPos) const;

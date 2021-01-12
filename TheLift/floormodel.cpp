@@ -1,11 +1,10 @@
 #include "floormodel.h"
 
-FloorModel::FloorModel(int floorCount, QObject *parent)
-    : QAbstractListModel(parent), mFloors{QVector<Floor>(floorCount, Floor{})}
+#include <QDebug>
+
+FloorModel::FloorModel(QObject *parent) : QAbstractListModel(parent)
+
 {
-    // test
-    mFloors[0] = Floor{QVector<int>{1, 2, 3, 4}};
-    mFloors[6] = Floor{QVector<int>{4, 3, 2, 1}};
 }
 
 int FloorModel::rowCount(const QModelIndex &parent) const
@@ -40,4 +39,25 @@ QHash<int, QByteArray> FloorModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[PeopleWithDestinationsRole] = "peopleWithDestinations";
     return roles;
+}
+
+void FloorModel::addEmptyFloors(int count)
+{
+    qDebug() << "count" << count;
+
+    beginResetModel();
+    mFloors.reserve(count);
+    for (int i = 0; i < count; ++i) {
+        mFloors.push_back(Floor{});
+    }
+    endResetModel();
+    emit dataChanged(QModelIndex{}, QModelIndex{});
+}
+
+void FloorModel::changeFloor(int level, const Floor &floor)
+{
+    qDebug() << "level" << level;
+
+    mFloors[level] = floor;
+    emit dataChanged(this->index(level), this->index(level));
 }

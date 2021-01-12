@@ -14,20 +14,33 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    QScopedPointer<LiftManagerThread> liftManager{new LiftManagerThread};
+    QScopedPointer<LiftManagerThread> liftManagerThread{new LiftManagerThread};
     BackEnd backEnd;
+    FloorModel floorModel;
 
-    QObject::connect(liftManager.get(), &LiftManagerThread::liftLevelChanged,
-                     &backEnd, &BackEnd::setLiftFloor);
+    QObject::connect(liftManagerThread.get(),
+                     &LiftManagerThread::liftLevelChanged, &backEnd,
+                     &BackEnd::setLiftFloor);
 
-    QObject::connect(liftManager.get(), &LiftManagerThread::finished,
-                     liftManager.get(), &QObject::deleteLater);
+    QObject::connect(liftManagerThread.get(), &LiftManagerThread::finished,
+                     liftManagerThread.get(), &QObject::deleteLater);
+
+    QObject::connect(liftManagerThread.get(),
+                     &LiftManagerThread::addEmptyFloors, &floorModel,
+                     &FloorModel::addEmptyFloors);
+
+    QObject::connect(
+        liftManagerThread.get(), &LiftManagerThread::peopleOnFloorChanged,
+        [&floorModel](const QVector<int> &peopleOnFloor, int level) {
+            floorModel.changeFloor(level, Floor{peopleOnFloor});
+        });
+
+    liftManagerThread->start();
 
     QQmlApplicationEngine engine;
     auto context = engine.rootContext();
     context->setContextProperty("backend", &backEnd);
 
-    FloorModel floorModel{7};
     engine.setInitialProperties(
         {{"floorModel", QVariant::fromValue(&floorModel)}});
 
@@ -41,6 +54,6 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
     engine.load(url);
 
-    liftManager->start();
+    // liftManagerThread->start();
     return app.exec();
 }

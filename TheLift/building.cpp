@@ -9,6 +9,13 @@ Building::Building(const QVector<QVector<int>> &queues, QObject *parent)
     assert(queues.size() > 0);
 }
 
+void Building::sendAllPeopleRequestingLift()
+{
+    for (int i = 0; i < mQueues.size(); ++i) {
+        emit peopleRequestingLiftChanged(mQueues[i], i);
+    }
+}
+
 bool Building::allQueuesEmpty() const
 {
     return std::all_of(mQueues.begin(), mQueues.end(),
