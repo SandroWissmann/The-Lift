@@ -42,11 +42,20 @@ void Lift::goToNextFloor()
     releasePassengersWithCurrentFloorDestination();
 }
 
+QString Lift::passengersAsString()
+{
+    QString passengerStr;
+    passengerStr.reserve(mPassengers.size() * 2);
+    for (const auto &passenger : mPassengers) {
+        passengerStr += QString::number(passenger) + " ";
+    }
+    return passengerStr;
+}
+
 void Lift::releasePassengersWithCurrentFloorDestination()
 {
     mPassengers.erase(mCurrentFloor);
-    emit passengersChanged(
-        QVector<int>{mPassengers.begin(), mPassengers.end()});
+    emit passengersChanged(passengersAsString());
 }
 
 bool Lift::goUp()
@@ -75,8 +84,7 @@ void Lift::addPeopleWhoWantToGoUp()
     auto newPassengers = mBuilding->removePeopleWhoWantToGoUp(
         mCapacity - mPassengers.size(), mCurrentFloor);
     mPassengers.insert(newPassengers.begin(), newPassengers.end());
-    emit passengersChanged(
-        QVector<int>{mPassengers.begin(), mPassengers.end()});
+    emit passengersChanged(passengersAsString());
 }
 
 bool Lift::goUpToNextFloorPushedUp()
@@ -150,8 +158,7 @@ void Lift::addPeopleWhoWantToGoDown()
     auto newPassengers = mBuilding->removePeopleWhoWantToGoDown(
         mCapacity - mPassengers.size(), mCurrentFloor);
     mPassengers.insert(newPassengers.begin(), newPassengers.end());
-    emit passengersChanged(
-        QVector<int>{mPassengers.begin(), mPassengers.end()});
+    emit passengersChanged(passengersAsString());
 }
 
 bool Lift::goDownToNextFloorPushedDown()

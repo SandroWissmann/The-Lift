@@ -44,6 +44,7 @@ Window {
             width: root.width / 2
             floorCount: root.floorCount
             currenFloor: backend.liftFloor
+            peopleInLift: backend.peopleInLift
         }
     }
 }

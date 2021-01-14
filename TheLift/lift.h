@@ -23,9 +23,11 @@ public:
 
 signals:
     void arrivedToNewFloor(int floor);
-    void passengersChanged(QVector<int> passengers);
+    void passengersChanged(const QString &passengers);
 
 private:
+    QString passengersAsString();
+
     void releasePassengersWithCurrentFloorDestination();
 
     bool goUp();

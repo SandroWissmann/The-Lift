@@ -19,6 +19,7 @@ signals:
     void addEmptyFloors(int count);
     void liftLevelChanged(int level);
     void peopleOnFloorChanged(const QVector<int> &peopleOnFloor, int level);
+    void peopleInLiftChanged(const QString &peopleInLift);
 
 private slots:
     void goToNextFloor();

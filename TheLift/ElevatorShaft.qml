@@ -5,6 +5,8 @@ Item {
 
     property int floorCount
     property int currenFloor
+
+    property alias peopleInLift: peopleInLiftText.text
     Rectangle {
         id: shaftRect
         width: root.width
@@ -28,6 +30,11 @@ Item {
                     duration: 500
                     easing.type: Easing.InOutQuad
                 }
+            }
+
+            Text {
+                anchors.fill:parent
+                id: peopleInLiftText
             }
         }
     }

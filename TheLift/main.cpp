@@ -22,6 +22,10 @@ int main(int argc, char *argv[])
                      &LiftManagerThread::liftLevelChanged, &backEnd,
                      &BackEnd::setLiftFloor);
 
+    QObject::connect(liftManagerThread.get(),
+                     &LiftManagerThread::peopleInLiftChanged, &backEnd,
+                     &BackEnd::setPeopleInLift);
+
     QObject::connect(liftManagerThread.get(), &LiftManagerThread::finished,
                      liftManagerThread.get(), &QObject::deleteLater);
 

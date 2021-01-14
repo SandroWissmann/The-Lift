@@ -9,11 +9,25 @@ int BackEnd::liftFloor() const
     return mLiftFloor;
 }
 
+QString BackEnd::peopleInLift() const
+{
+    return mPeopleInLift;
+}
+
 void BackEnd::setLiftFloor(int liftFloor)
 {
     if (mLiftFloor == liftFloor) {
         return;
     }
     mLiftFloor = liftFloor;
-    liftFloorChanged();
+    emit liftFloorChanged();
+}
+
+void BackEnd::setPeopleInLift(const QString &peopleInLift)
+{
+    if (mPeopleInLift == peopleInLift) {
+        return;
+    }
+    mPeopleInLift = peopleInLift;
+    emit peopleInLiftChanged();
 }
