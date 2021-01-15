@@ -2,11 +2,15 @@
 
 #include "building.h"
 
+#include <QThread>
+
 #include <algorithm>
 #include <cassert>
 
-Lift::Lift(Building *building, int capacity, QObject *parent)
-    : QObject(parent), mCapacity{capacity}, mBuilding{building}
+Lift::Lift(Building *building, int capacity, unsigned long delayOpenDoors,
+           QObject *parent)
+    : QObject(parent), mCapacity{capacity},
+      mDelayOpenDoors{delayOpenDoors}, mBuilding{building}
 {
     assert(capacity > 0);
     assert(building->floorsCount() > 0);
@@ -39,6 +43,7 @@ void Lift::goToNextFloor()
             }
         }
     }
+    QThread::msleep(mDelayOpenDoors);
     releasePassengersWithCurrentFloorDestination();
 }
 
@@ -61,6 +66,7 @@ void Lift::releasePassengersWithCurrentFloorDestination()
 bool Lift::goUp()
 {
     addPeopleWhoWantToGoUp();
+    QThread::msleep(mDelayOpenDoors);
     if (mPassengers.empty()) {
         if (goUpToNextFloorPushedUp()) {
             return true;
@@ -133,6 +139,7 @@ int Lift::getNextFloorUpWithPerson() const
 bool Lift::goDown()
 {
     addPeopleWhoWantToGoDown();
+    QThread::msleep(mDelayOpenDoors);
     if (mPassengers.empty()) {
         if (goDownToNextFloorPushedDown()) {
             return true;

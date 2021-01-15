@@ -22,6 +22,7 @@ void LiftManagerThread::run()
     connect(mLift.get(), &Lift::passengersChanged, this,
             &LiftManagerThread::peopleInLiftChanged);
 
+    emit peopleInLiftChanged(mLift->passengersAsString());
     emit liftLevelChanged(mLift->currentFloor());
 
     connect(mBuilding.get(), &Building::peopleRequestingLiftChanged, this,

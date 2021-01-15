@@ -12,7 +12,8 @@ class Building;
 class Lift : public QObject {
     Q_OBJECT
 public:
-    Lift(Building *building, int capacity, QObject *parent = nullptr);
+    Lift(Building *building, int capacity, unsigned long delayOpenDoors = 500,
+         QObject *parent = nullptr);
 
     bool hasPassengers() const;
     int currentFloor() const;
@@ -21,13 +22,12 @@ public:
 
     void goToNextFloor();
 
+    QString passengersAsString();
 signals:
     void arrivedToNewFloor(int floor);
     void passengersChanged(const QString &passengers);
 
 private:
-    QString passengersAsString();
-
     void releasePassengersWithCurrentFloorDestination();
 
     bool goUp();
@@ -65,6 +65,7 @@ private:
     Direction mDirection = Direction::up;
     int mCurrentFloor = 0;
     int mCapacity;
+    const unsigned long mDelayOpenDoors;
 
     Building *mBuilding;
 };
