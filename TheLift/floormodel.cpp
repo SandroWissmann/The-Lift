@@ -1,7 +1,5 @@
 #include "floormodel.h"
 
-#include <QDebug>
-
 FloorModel::FloorModel(QObject *parent) : QAbstractListModel(parent)
 
 {
@@ -56,8 +54,6 @@ void FloorModel::addEmptyFloors(int count)
 
 void FloorModel::changeFloor(int level, const Floor &floor)
 {
-    qDebug() << "level" << level;
-
     mFloors[level] = floor;
     emit dataChanged(this->index(level), this->index(level));
 }
