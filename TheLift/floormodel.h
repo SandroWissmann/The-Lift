@@ -19,6 +19,7 @@ public:
 
     QHash<int, QByteArray> roleNames() const;
 
+public slots:
     void addEmptyFloors(int count);
     void changeFloor(int level, const Floor &floor);
 
