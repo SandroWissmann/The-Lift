@@ -31,7 +31,9 @@ public:
     int floorsCount() const;
 
 public slots:
-    void addPerson(int person, int floor);
+    void addPersonWaitingForLift(int personWaitingForLift, int floor);
+    void addPersonWaitingForLift(const QVector<int> &personsWaitingForLift,
+                                 int floor);
 
 signals:
     void peopleRequestingLiftChanged(const QVector<int> persons, int floor);
