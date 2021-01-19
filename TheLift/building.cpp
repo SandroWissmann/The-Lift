@@ -131,6 +131,7 @@ int Building::floorsCount() const
 
 void Building::addPersonWaitingForLift(int personWaitingForLift, int floor)
 {
+    assert(floor < mQueues.size() && floor >= 0);
     assert(personWaitingForLift != floor);
     mQueues[floor].push_back(floor);
     emit peopleRequestingLiftChanged(mQueues[floor], floor);
@@ -139,6 +140,12 @@ void Building::addPersonWaitingForLift(int personWaitingForLift, int floor)
 void Building::addPersonWaitingForLift(
     const QVector<int> &personsWaitingForLift, int floor)
 {
+    assert(floor < mQueues.size() && floor >= 0);
     mQueues[floor].reserve(mQueues[floor].size() +
                            personsWaitingForLift.size());
+    for (const auto &personWaitingForLift : personsWaitingForLift) {
+        assert(personWaitingForLift != floor);
+        mQueues[floor].push_back(personWaitingForLift);
+    }
+    emit peopleRequestingLiftChanged(mQueues[floor], floor);
 }
