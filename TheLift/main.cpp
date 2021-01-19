@@ -3,45 +3,48 @@
 
 #include <QDebug>
 #include <QQmlContext>
-#include <QScopedPointer>
 
 #include "backend.h"
 #include "floor.h"
 #include "floormodel.h"
-#include "liftmanagerthread.h"
+
+#include "liftmanagercontroller.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    QScopedPointer<LiftManagerThread> liftManagerThread{new LiftManagerThread};
     BackEnd backEnd;
     FloorModel floorModel;
 
-    QObject::connect(liftManagerThread.get(),
-                     &LiftManagerThread::liftLevelChanged, &backEnd,
+    LiftManagerController LiftManagerController;
+
+    QObject::connect(&LiftManagerController,
+                     &LiftManagerController::liftLevelChanged, &backEnd,
                      &BackEnd::setLiftFloor);
 
-    QObject::connect(liftManagerThread.get(),
-                     &LiftManagerThread::peopleInLiftChanged, &backEnd,
+    QObject::connect(&LiftManagerController,
+                     &LiftManagerController::peopleInLiftChanged, &backEnd,
                      &BackEnd::setPeopleInLift);
 
-    QObject::connect(liftManagerThread.get(), &LiftManagerThread::finished,
-                     liftManagerThread.get(), &QObject::deleteLater);
-
-    QObject::connect(liftManagerThread.get(),
-                     &LiftManagerThread::addEmptyFloors, &floorModel,
+    QObject::connect(&LiftManagerController,
+                     &LiftManagerController::addEmptyFloors, &floorModel,
                      &FloorModel::addEmptyFloors);
 
     QObject::connect(
-        liftManagerThread.get(), &LiftManagerThread::peopleOnFloorChanged,
+        &LiftManagerController, &LiftManagerController::peopleOnFloorChanged,
         [&floorModel](const QVector<int> &peopleOnFloor, int level) {
             floorModel.changeFloor(level, Floor{peopleOnFloor});
         });
 
-    liftManagerThread->start();
+    LiftManagerController.start();
+
+    QThread::msleep(20000);
+
+    qDebug() << "rows" << floorModel.rowCount(QModelIndex{});
 
     QQmlApplicationEngine engine;
+
     auto context = engine.rootContext();
     context->setContextProperty("backend", &backEnd);
 
@@ -58,6 +61,5 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
     engine.load(url);
 
-    // liftManagerThread->start();
     return app.exec();
 }

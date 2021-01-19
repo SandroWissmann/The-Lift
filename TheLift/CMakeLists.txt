@@ -25,8 +25,10 @@ set(PROJECT_SOURCES
         floormodel.cpp
         lift.h
         lift.cpp
-        liftmanagerthread.h
-        liftmanagerthread.cpp
+        liftmanagercontroller.h
+        liftmanagercontroller.cpp
+        liftmanagerworker.h
+        liftmanagerworker.cpp
         main.cpp
         qml.qrc
 )
