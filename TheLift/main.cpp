@@ -15,33 +15,28 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     BackEnd backEnd;
-    FloorModel floorModel;
 
-    LiftManagerController LiftManagerController;
+    constexpr int floorsCount = 7;
+    constexpr int capacity = 5;
+    LiftManagerController liftManagerController(floorsCount, capacity);
 
-    QObject::connect(&LiftManagerController,
+    FloorModel floorModel{liftManagerController.floorsCount()};
+
+    QObject::connect(&liftManagerController,
                      &LiftManagerController::liftLevelChanged, &backEnd,
                      &BackEnd::setLiftFloor);
 
-    QObject::connect(&LiftManagerController,
+    QObject::connect(&liftManagerController,
                      &LiftManagerController::peopleInLiftChanged, &backEnd,
                      &BackEnd::setPeopleInLift);
 
-    QObject::connect(&LiftManagerController,
-                     &LiftManagerController::addEmptyFloors, &floorModel,
-                     &FloorModel::addEmptyFloors);
-
     QObject::connect(
-        &LiftManagerController, &LiftManagerController::peopleOnFloorChanged,
+        &liftManagerController, &LiftManagerController::peopleOnFloorChanged,
         [&floorModel](const QVector<int> &peopleOnFloor, int level) {
             floorModel.changeFloor(level, Floor{peopleOnFloor});
         });
 
-    LiftManagerController.start();
-
-    QThread::msleep(20000);
-
-    qDebug() << "rows" << floorModel.rowCount(QModelIndex{});
+    liftManagerController.start();
 
     QQmlApplicationEngine engine;
 

@@ -2,15 +2,15 @@
 
 #include <QDebug>
 
-FloorModel::FloorModel(QObject *parent) : QAbstractListModel(parent)
+FloorModel::FloorModel(int floorCount, QObject *parent)
+    : QAbstractListModel(parent)
 
 {
+    addEmptyFloors(floorCount);
 }
 
 int FloorModel::rowCount(const QModelIndex &parent) const
 {
-    qDebug() << "rowCount: " << mFloors.size();
-
     Q_UNUSED(parent)
     return mFloors.size();
 }
@@ -45,15 +45,12 @@ QHash<int, QByteArray> FloorModel::roleNames() const
 
 void FloorModel::addEmptyFloors(int count)
 {
-    qDebug() << "add Empty floors";
-
     beginResetModel();
     mFloors.reserve(count);
     for (int i = 0; i < count; ++i) {
         mFloors.push_back(Floor{});
     }
     endResetModel();
-    emit dataChanged(QModelIndex{}, QModelIndex{});
 }
 
 void FloorModel::changeFloor(int level, const Floor &floor)

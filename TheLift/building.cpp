@@ -9,6 +9,11 @@ Building::Building(const QVector<QVector<int>> &queues, QObject *parent)
     assert(queues.size() > 0);
 }
 
+Building::Building(int floorsCount, QObject *parent)
+    : Building(makeFloors(floorsCount), parent)
+{
+}
+
 void Building::sendAllPeopleRequestingLift()
 {
     for (int i = 0; i < mQueues.size(); ++i) {
@@ -148,4 +153,9 @@ void Building::addPersonWaitingForLift(
         mQueues[floor].push_back(personWaitingForLift);
     }
     emit peopleRequestingLiftChanged(mQueues[floor], floor);
+}
+
+QVector<QVector<int>> makeFloors(int floorsCount)
+{
+    return QVector<QVector<int>>(floorsCount, QVector<int>{});
 }

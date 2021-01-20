@@ -10,6 +10,8 @@ public:
     explicit Building(const QVector<QVector<int>> &queues,
                       QObject *parent = nullptr);
 
+    explicit Building(int floorsCount, QObject *parent = nullptr);
+
     void sendAllPeopleRequestingLift();
 
     bool allQueuesEmpty() const;
@@ -42,5 +44,7 @@ signals:
 private:
     QVector<QVector<int>> mQueues;
 };
+
+QVector<QVector<int>> makeFloors(int floorsCount);
 
 #endif // BUILDING_H

@@ -7,22 +7,27 @@
 class LiftManagerController : public QObject {
     Q_OBJECT
 public:
-    explicit LiftManagerController(QObject *parent = nullptr);
+    explicit LiftManagerController(int floorsCount, int liftCapacity,
+                                   QObject *parent = nullptr);
     ~LiftManagerController();
 
 public:
     void start();
 
+    int floorsCount() const;
+    int liftCapacity() const;
+
 signals:
     void startLift();
 
-    void addEmptyFloors(int count);
     void liftLevelChanged(int level);
     void peopleOnFloorChanged(const QVector<int> &peopleOnFloor, int level);
     void peopleInLiftChanged(const QString &peopleInLift);
 
 private:
     QThread mWorkerThread;
+    int mFloorsCount;
+    int mLiftCapacity;
 };
 
 #endif // LIFTMANAGERCONTROLLER_H

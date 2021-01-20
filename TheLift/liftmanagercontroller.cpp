@@ -2,17 +2,17 @@
 
 #include "liftmanagerworker.h"
 
-LiftManagerController::LiftManagerController(QObject *parent) : QObject(parent)
+LiftManagerController::LiftManagerController(int floorsCount, int liftCapacity,
+                                             QObject *parent)
+    : QObject(parent), mFloorsCount{floorsCount}, mLiftCapacity{liftCapacity}
 {
-    auto liftManagerWorker = new LiftManagerWorker;
+    auto liftManagerWorker = new LiftManagerWorker{mFloorsCount, mLiftCapacity};
     liftManagerWorker->moveToThread(&mWorkerThread);
     connect(&mWorkerThread, &QThread::finished, liftManagerWorker,
             &QObject::deleteLater);
     connect(this, &LiftManagerController::startLift, liftManagerWorker,
             &LiftManagerWorker::runLift);
 
-    connect(liftManagerWorker, &LiftManagerWorker::addEmptyFloors, this,
-            &LiftManagerController::addEmptyFloors);
     connect(liftManagerWorker, &LiftManagerWorker::liftLevelChanged, this,
             &LiftManagerController::liftLevelChanged);
     connect(liftManagerWorker, &LiftManagerWorker::peopleOnFloorChanged, this,
@@ -32,4 +32,14 @@ LiftManagerController::~LiftManagerController()
 void LiftManagerController::start()
 {
     emit startLift();
+}
+
+int LiftManagerController::floorsCount() const
+{
+    return mFloorsCount;
+}
+
+int LiftManagerController::liftCapacity() const
+{
+    return mLiftCapacity;
 }
