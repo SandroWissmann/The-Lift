@@ -12,7 +12,6 @@ Window {
     property alias floorModel: floorListView.model
 
     property int floorCount: root.floorModel.rowCount()
-    //property int floorCount: 7
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
