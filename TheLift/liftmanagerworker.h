@@ -15,8 +15,11 @@ public:
 
 signals:
     void liftLevelChanged(int level);
+    void liftCapacityChanged(int capacity);
     void peopleOnFloorChanged(const QVector<int> &peopleOnFloor, int level);
     void peopleInLiftChanged(const QString &peopleInLift);
+
+    void changeLiftCapacity(int capacity);
 
 public slots:
     void runLift();

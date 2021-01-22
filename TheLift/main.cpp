@@ -22,13 +22,23 @@ int main(int argc, char *argv[])
 
     FloorModel floorModel{liftManagerController.floorsCount()};
 
+    // "getter signals"
     QObject::connect(&liftManagerController,
                      &LiftManagerController::liftLevelChanged, &backEnd,
                      &BackEnd::setLiftFloor);
 
     QObject::connect(&liftManagerController,
+                     &LiftManagerController::liftCapacityChanged, &backEnd,
+                     &BackEnd::setLiftCapacity);
+
+    QObject::connect(&liftManagerController,
                      &LiftManagerController::peopleInLiftChanged, &backEnd,
                      &BackEnd::setPeopleInLift);
+
+    // "setter signals"
+    QObject::connect(&backEnd, &BackEnd::liftCapacityChanged,
+                     &liftManagerController,
+                     &LiftManagerController::changeLiftCapacity);
 
     QObject::connect(
         &liftManagerController, &LiftManagerController::peopleOnFloorChanged,

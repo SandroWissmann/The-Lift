@@ -26,6 +26,20 @@ int Lift::currentFloor() const
     return mCurrentFloor;
 }
 
+void Lift::setCapacity(int capacity)
+{
+    if (mCapacity == capacity) {
+        return;
+    }
+    mCapacity = capacity;
+    emit capacityChanged(mCapacity);
+}
+
+int Lift::capacity() const
+{
+    return mCapacity;
+}
+
 void Lift::goToNextFloor()
 {
     if (mDirection == Direction::up) {

@@ -14,6 +14,7 @@ LiftManagerWorker::LiftManagerWorker(int floorsCount, int liftCapacity,
     : QObject(parent), mBuilding{new Building(floorsCount, this)},
       mLift{new Lift(mBuilding, liftCapacity, 500, this)}
 {
+    // "getter signals"
     connect(mLift, &Lift::arrivedToNewFloor, this,
             &LiftManagerWorker::liftLevelChanged);
 
@@ -22,6 +23,10 @@ LiftManagerWorker::LiftManagerWorker(int floorsCount, int liftCapacity,
 
     connect(mBuilding, &Building::peopleRequestingLiftChanged, this,
             &LiftManagerWorker::peopleOnFloorChanged);
+
+    // "setter signals"
+    connect(this, &LiftManagerWorker::changeLiftCapacity, mLift,
+            &Lift::setCapacity);
 }
 
 void LiftManagerWorker::runLift()

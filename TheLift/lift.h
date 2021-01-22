@@ -18,6 +18,12 @@ public:
     bool hasPassengers() const;
     int currentFloor() const;
 
+public slots:
+    void setCapacity(int capacity);
+
+public:
+    int capacity() const;
+
     enum class Direction { up, down };
 
     void goToNextFloor();
@@ -26,6 +32,7 @@ public:
 signals:
     void arrivedToNewFloor(int floor);
     void passengersChanged(const QString &passengers);
+    void capacityChanged(int capacity);
 
 private:
     void releasePassengersWithCurrentFloorDestination();
