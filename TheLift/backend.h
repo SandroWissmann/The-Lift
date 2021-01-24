@@ -30,6 +30,8 @@ signals:
     void liftFloorChanged();
     void liftCapacityChanged();
 
+    void liftNewCapacity(int capacity);
+
     void peopleInLiftChanged();
 
 private:

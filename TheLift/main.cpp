@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
                      &BackEnd::setPeopleInLift);
 
     // "setter signals"
-    QObject::connect(&backEnd, &BackEnd::setLiftCapacity,
+    QObject::connect(&backEnd, &BackEnd::liftNewCapacity,
                      &liftManagerController,
                      &LiftManagerController::changeLiftCapacity);
 

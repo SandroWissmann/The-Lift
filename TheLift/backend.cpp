@@ -35,6 +35,7 @@ void BackEnd::setLiftCapacity(int liftCapacity)
     }
     mLiftCapacity = liftCapacity;
     emit liftCapacityChanged();
+    emit liftNewCapacity(mLiftCapacity);
 }
 
 void BackEnd::setPeopleInLift(const QString &peopleInLift)
