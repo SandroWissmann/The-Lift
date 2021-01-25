@@ -31,6 +31,11 @@ LiftManagerWorker::LiftManagerWorker(int floorsCount, int liftCapacity,
 
 void LiftManagerWorker::runLift()
 {
+    // remove later
+    for (int i = 0; i < queues.size(); ++i) {
+        mBuilding->addPersonWaitingForLift(queues[i], i);
+    }
+
     emit peopleInLiftChanged(mLift->passengersAsString());
     emit liftLevelChanged(mLift->currentFloor());
 
