@@ -33,6 +33,9 @@ QVariant FloorModel::data(const QModelIndex &index, int role) const
     if (role == PeopleWithDestinationsRole) {
         return mFloors[index.row()].asString();
     }
+    if (role == RowRole) {
+        return index.row();
+    }
     return QVariant{};
 }
 
@@ -40,6 +43,7 @@ QHash<int, QByteArray> FloorModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[PeopleWithDestinationsRole] = "peopleWithDestinations";
+    roles[RowRole] = "row";
     return roles;
 }
 

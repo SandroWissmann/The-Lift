@@ -9,7 +9,7 @@ class FloorModel : public QAbstractListModel {
 public:
     FloorModel(int floorCount, QObject *parent = nullptr);
 
-    enum FloorRoles { PeopleWithDestinationsRole = Qt::UserRole + 1 };
+    enum FloorRoles { PeopleWithDestinationsRole = Qt::UserRole + 1, RowRole };
 
     int rowCount(const QModelIndex &parent) const;
 

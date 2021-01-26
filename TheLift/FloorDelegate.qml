@@ -4,6 +4,7 @@ import QtQuick.Layouts 2.15
 Item {
     id: root
     required property string peopleWithDestinations
+    required property int row
 
     Rectangle {
         id: floorRect
