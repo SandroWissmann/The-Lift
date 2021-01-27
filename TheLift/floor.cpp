@@ -13,3 +13,8 @@ QString Floor::asString() const
     }
     return result;
 }
+
+void Floor::addPerson(int person)
+{
+    mPeopleWithDestinations.push_back(person);
+}

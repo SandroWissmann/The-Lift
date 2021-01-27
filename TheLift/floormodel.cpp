@@ -39,11 +39,27 @@ QVariant FloorModel::data(const QModelIndex &index, int role) const
     return QVariant{};
 }
 
+bool FloorModel::setData(const QModelIndex &index, const QVariant &value,
+                         int role)
+{
+    if (role == InsertPersonRole) {
+        mFloors[index.row()].addPerson(value.toInt());
+        return true;
+    }
+    return false;
+}
+
+Qt::ItemFlags FloorModel::flags(const QModelIndex &index) const
+{
+    return Qt::ItemIsEditable | QAbstractListModel::flags(index);
+}
+
 QHash<int, QByteArray> FloorModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[PeopleWithDestinationsRole] = "peopleWithDestinations";
     roles[RowRole] = "row";
+    roles[InsertPersonRole] = "insertPerson";
     return roles;
 }
 

@@ -9,6 +9,8 @@ public:
 
     QString asString() const;
 
+    void addPerson(int person);
+
 private:
     QVector<int> mPeopleWithDestinations;
 };
