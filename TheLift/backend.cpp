@@ -37,6 +37,11 @@ QString BackEnd::peopleInLift() const
     return mPeopleInLift;
 }
 
+bool BackEnd::liftStarted() const
+{
+    return mLiftStarted;
+}
+
 void BackEnd::setLiftFloor(int liftFloor)
 {
     if (mLiftFloor == liftFloor) {
@@ -63,4 +68,14 @@ void BackEnd::setPeopleInLift(const QString &peopleInLift)
     }
     mPeopleInLift = peopleInLift;
     emit peopleInLiftChanged();
+}
+
+void BackEnd::setLiftStarted(bool liftStarted)
+{
+    if (mLiftStarted == liftStarted) {
+        return;
+    }
+    mLiftStarted = liftStarted;
+    emit liftStartedChanged();
+    emit liftNewStarted(mLiftStarted);
 }

@@ -30,32 +30,37 @@ class BackEnd : public QObject {
                    liftCapacityChanged)
     Q_PROPERTY(QString peopleInLift READ peopleInLift WRITE setPeopleInLift
                    NOTIFY peopleInLiftChanged)
+    Q_PROPERTY(QString liftStarted READ liftStarted WRITE setLiftStarted NOTIFY
+                   liftStartedChanged)
+
 public:
     explicit BackEnd(QObject *parent = nullptr);
 
     int liftFloor() const;
     int liftCapacity() const;
-
     QString peopleInLift() const;
+    bool liftStarted() const;
 
 public slots:
     void setLiftFloor(int liftFloor);
     void setLiftCapacity(int liftCapacity);
-
     void setPeopleInLift(const QString &peopleInLift);
+    void setLiftStarted(bool liftStarted);
 
 signals:
     void liftFloorChanged();
     void liftCapacityChanged();
+    void peopleInLiftChanged();
+    void liftStartedChanged();
 
     void liftNewCapacity(int capacity);
-
-    void peopleInLiftChanged();
+    void liftNewStarted(int liftStarted);
 
 private:
     int mLiftFloor;
     int mLiftCapacity;
     QString mPeopleInLift;
+    bool mLiftStarted;
 };
 
 #endif // BACKEND_H
