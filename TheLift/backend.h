@@ -30,7 +30,7 @@ class BackEnd : public QObject {
                    liftCapacityChanged)
     Q_PROPERTY(QString peopleInLift READ peopleInLift WRITE setPeopleInLift
                    NOTIFY peopleInLiftChanged)
-    Q_PROPERTY(QString liftStarted READ liftStarted WRITE setLiftStarted NOTIFY
+    Q_PROPERTY(bool liftStarted READ liftStarted WRITE setLiftStarted NOTIFY
                    liftStartedChanged)
 
 public:
