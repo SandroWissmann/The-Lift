@@ -73,6 +73,14 @@ Window {
             }
             Switch {
                 id: toggleLift
+
+                onPositionChanged: {
+                    if (position == 1.0) {
+                        backend.liftStarted = true
+                    } else if (position == 0.0) {
+                        backend.liftStarted = false
+                    }
+                }
             }
         }
     }
