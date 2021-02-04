@@ -58,13 +58,15 @@ int main(int argc, char *argv[])
                      &liftManagerController,
                      &LiftManagerController::changeLiftCapacity);
 
+    // "setter signals"
+    QObject::connect(&backEnd, &BackEnd::liftNewStarted, &liftManagerController,
+                     &LiftManagerController::startLift);
+
     QObject::connect(
         &liftManagerController, &LiftManagerController::peopleOnFloorChanged,
         [&floorModel](const QVector<int> &peopleOnFloor, int level) {
             floorModel.changeFloor(level, Floor{peopleOnFloor});
         });
-
-    liftManagerController.start();
 
     QQmlApplicationEngine engine;
 

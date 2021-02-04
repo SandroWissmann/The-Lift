@@ -30,13 +30,11 @@ public:
     ~LiftManagerController();
 
 public:
-    void start();
-
     int floorsCount() const;
     int liftCapacity() const;
 
 signals:
-    void startLift();
+    void startLift(bool started);
 
     void liftLevelChanged(int level);
     void liftCapacityChanged(int capacity);

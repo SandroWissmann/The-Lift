@@ -62,8 +62,19 @@ void LiftManagerWorker::runLift()
     QTimer::singleShot(0, this, &LiftManagerWorker::goToNextFloor);
 }
 
+void LiftManagerWorker::startLift(bool started)
+{
+    if (mLiftStarted == started) {
+        return;
+    }
+    mLiftStarted = started;
+}
+
 void LiftManagerWorker::goToNextFloor()
 {
+    if (!mLiftStarted) {
+        return;
+    }
     mLift->goToNextFloor();
     QTimer::singleShot(2000, this, &LiftManagerWorker::goToNextFloor);
 }

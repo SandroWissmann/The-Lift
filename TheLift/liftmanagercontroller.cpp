@@ -45,6 +45,9 @@ LiftManagerController::LiftManagerController(int floorsCount, int liftCapacity,
     connect(this, &LiftManagerController::changeLiftCapacity, liftManagerWorker,
             &LiftManagerWorker::changeLiftCapacity);
 
+    connect(this, &LiftManagerController::startLift, liftManagerWorker,
+            &LiftManagerWorker::startLift);
+
     mWorkerThread.start();
 }
 
@@ -52,11 +55,6 @@ LiftManagerController::~LiftManagerController()
 {
     mWorkerThread.quit();
     mWorkerThread.wait();
-}
-
-void LiftManagerController::start()
-{
-    emit startLift();
 }
 
 int LiftManagerController::floorsCount() const

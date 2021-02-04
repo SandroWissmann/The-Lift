@@ -41,6 +41,7 @@ signals:
 
 public slots:
     void runLift();
+    void startLift(bool started);
 
 private slots:
     void goToNextFloor();
@@ -48,6 +49,7 @@ private slots:
 private:
     Building *mBuilding;
     Lift *mLift;
+    bool mLiftStarted{false};
 };
 
 #endif // LIFTMANAGERWORKER_H
