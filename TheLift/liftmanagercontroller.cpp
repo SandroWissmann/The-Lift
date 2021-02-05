@@ -28,9 +28,6 @@ LiftManagerController::LiftManagerController(int floorsCount, int liftCapacity,
     liftManagerWorker->moveToThread(&mWorkerThread);
     connect(&mWorkerThread, &QThread::finished, liftManagerWorker,
             &QObject::deleteLater);
-    connect(this, &LiftManagerController::startLift, liftManagerWorker,
-            &LiftManagerWorker::runLift);
-
     // "getter signals"
     connect(liftManagerWorker, &LiftManagerWorker::liftLevelChanged, this,
             &LiftManagerController::liftLevelChanged);

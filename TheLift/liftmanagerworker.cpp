@@ -45,15 +45,15 @@ LiftManagerWorker::LiftManagerWorker(int floorsCount, int liftCapacity,
     // "setter signals"
     connect(this, &LiftManagerWorker::changeLiftCapacity, mLift,
             &Lift::setCapacity);
-}
 
-void LiftManagerWorker::runLift()
-{
     // remove later
     for (int i = 0; i < queues.size(); ++i) {
         mBuilding->addPersonWaitingForLift(queues[i], i);
     }
+}
 
+void LiftManagerWorker::runLift()
+{
     emit peopleInLiftChanged(mLift->passengersAsString());
     emit liftLevelChanged(mLift->currentFloor());
 
@@ -68,6 +68,7 @@ void LiftManagerWorker::startLift(bool started)
         return;
     }
     mLiftStarted = started;
+    runLift();
 }
 
 void LiftManagerWorker::goToNextFloor()
