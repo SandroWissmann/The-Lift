@@ -42,7 +42,7 @@ Window {
             ListView {
                 id: floorListView
                 width: root.width / 2
-                height: root.height - toggleLift.height
+                height: root.height - capacityTextField.height
                 Layout.fillHeight: true
                 Layout.margins: 0
                 clip: true
@@ -81,6 +81,20 @@ Window {
                         backend.liftStarted = false
                     }
                 }
+            }
+            Label {
+                text: "Capacity"
+            }
+            TextField {
+                id: capacityTextField
+                validator: IntValidator {
+                    bottom: 1
+                    top: 10
+                }
+            }
+            Button {
+                id: sendCapacityButton
+                text: "Set"
             }
         }
     }
