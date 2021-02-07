@@ -91,10 +91,12 @@ Window {
                     bottom: 1
                     top: 10
                 }
+                text: "5"
             }
             Button {
                 id: sendCapacityButton
                 text: "Set"
+                onPressed: backend.liftCapacity = capacityTextField.text
             }
         }
     }
