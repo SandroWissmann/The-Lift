@@ -57,8 +57,8 @@ signals:
     void liftNewStarted(int liftStarted);
 
 private:
-    int mLiftFloor;
-    int mLiftCapacity;
+    int mLiftFloor{0};
+    int mLiftCapacity{5};
     QString mPeopleInLift;
     bool mLiftStarted;
 };
