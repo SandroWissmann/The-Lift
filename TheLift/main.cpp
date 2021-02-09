@@ -19,7 +19,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include <QDebug>
 #include <QQmlContext>
 
 #include "backend.h"

@@ -18,8 +18,6 @@
  */
 #include "floormodel.h"
 
-#include <QDebug>
-
 FloorModel::FloorModel(int floorCount, QObject *parent)
     : QAbstractListModel(parent)
 
