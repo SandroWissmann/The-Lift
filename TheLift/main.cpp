@@ -67,8 +67,6 @@ int main(int argc, char *argv[])
             floorModel.changeFloor(level, Floor{peopleOnFloor});
         });
 
-    qDebug() << backEnd.liftFloor();
-
     QQmlApplicationEngine engine;
 
     auto context = engine.rootContext();
