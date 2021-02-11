@@ -75,9 +75,9 @@ Window {
                 id: toggleLift
 
                 onPositionChanged: {
-                    if (position == 1.0) {
+                    if (position === 1.0) {
                         backend.liftStarted = true
-                    } else if (position == 0.0) {
+                    } else if (position === 0.0) {
                         backend.liftStarted = false
                     }
                 }
