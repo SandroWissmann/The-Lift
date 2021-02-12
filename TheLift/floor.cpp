@@ -26,6 +26,7 @@ Floor::Floor(const QVector<int> &peopleWithDestinations)
 QString Floor::asString() const
 {
     QString result;
+    result.reserve(mPeopleWithDestinations.size());
     for (const auto &personWithDestination : mPeopleWithDestinations) {
         result.append(QString::number(personWithDestination) + " ");
     }
